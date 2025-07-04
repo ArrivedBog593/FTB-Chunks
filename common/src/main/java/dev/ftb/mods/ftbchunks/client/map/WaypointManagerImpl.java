@@ -75,15 +75,17 @@ public class WaypointManagerImpl implements Iterable<WaypointImpl>, WaypointMana
         JsonArray waypointArray = new JsonArray();
 
         for (WaypointImpl w : waypoints) {
-            JsonObject o = new JsonObject();
-            o.addProperty("hidden", w.isHidden());
-            o.addProperty("name", w.getName());
-            o.addProperty("x", w.getPos().getX());
-            o.addProperty("y", w.getPos().getY());
-            o.addProperty("z", w.getPos().getZ());
-            o.addProperty("color", String.format("#%06X", 0xFFFFFF & w.getColor()));
-            o.addProperty("type", w.getType().getId());
-            waypointArray.add(o);
+            if (!w.isTransient()) {
+                JsonObject o = new JsonObject();
+                o.addProperty("hidden", w.isHidden());
+                o.addProperty("name", w.getName());
+                o.addProperty("x", w.getPos().getX());
+                o.addProperty("y", w.getPos().getY());
+                o.addProperty("z", w.getPos().getZ());
+                o.addProperty("color", String.format("#%06X", 0xFFFFFF & w.getColor()));
+                o.addProperty("type", w.getType().getId());
+                waypointArray.add(o);
+            }
         }
 
         json.add("waypoints", waypointArray);
@@ -129,13 +131,6 @@ public class WaypointManagerImpl implements Iterable<WaypointImpl>, WaypointMana
         return waypoints.isEmpty();
     }
 
-    @Override
-    public Optional<WaypointImpl> getNearestDeathpoint(Player player) {
-        return deathpoints.isEmpty() ?
-                Optional.empty() :
-                deathpoints.stream().min(Comparator.comparingDouble(o -> o.getDistanceSq(player)));
-    }
-
     @NotNull
     @Override
     public Iterator<WaypointImpl> iterator() {
@@ -160,6 +155,13 @@ public class WaypointManagerImpl implements Iterable<WaypointImpl>, WaypointMana
     }
 
     @Override
+    public Waypoint addTransientWaypointAt(BlockPos pos, String name) {
+        WaypointImpl waypoint = new WaypointImpl(WaypointType.DEFAULT, mapDimension, pos).setName(name).setTransient(true);
+        add(waypoint);
+        return waypoint;
+    }
+
+    @Override
     public boolean removeWaypointAt(BlockPos pos) {
         WaypointImpl impl = new WaypointImpl(WaypointType.DEFAULT, mapDimension, pos);
         if (waypoints.contains(impl)) {
@@ -177,5 +179,12 @@ public class WaypointManagerImpl implements Iterable<WaypointImpl>, WaypointMana
     @Override
     public Collection<Waypoint> getAllWaypoints() {
         return Collections.unmodifiableCollection(waypoints);
+    }
+
+    @Override
+    public Optional<WaypointImpl> getNearestDeathpoint(Player player) {
+        return deathpoints.isEmpty() ?
+                Optional.empty() :
+                deathpoints.stream().min(Comparator.comparingDouble(o -> o.getDistanceSq(player)));
     }
 }

@@ -24,6 +24,7 @@ public class WaypointImpl implements Waypoint {
 	private String name = "";
 	private int color = 0xFFFFFF;
 	private WaypointMapIcon mapIcon;
+	private boolean isTransient;
 
 	public WaypointImpl(WaypointType type, MapDimension mapDimension, BlockPos pos) {
 		this.type = type;
@@ -83,6 +84,17 @@ public class WaypointImpl implements Waypoint {
 	public WaypointImpl setColor(int color) {
 		this.color = color;
 		mapDimension.markDirty();
+		return this;
+	}
+
+	@Override
+	public boolean isTransient() {
+		return isTransient;
+	}
+
+	@Override
+	public WaypointImpl setTransient(boolean isTransient) {
+		this.isTransient = isTransient;
 		return this;
 	}
 

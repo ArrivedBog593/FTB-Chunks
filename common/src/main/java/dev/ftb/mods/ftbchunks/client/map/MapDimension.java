@@ -3,6 +3,7 @@ package dev.ftb.mods.ftbchunks.client.map;
 import com.google.common.collect.ImmutableList;
 import dev.ftb.mods.ftbchunks.FTBChunks;
 import dev.ftb.mods.ftbchunks.api.FTBChunksAPI;
+import dev.ftb.mods.ftbchunks.api.client.event.WaypointManagerEvent;
 import dev.ftb.mods.ftbchunks.client.ClientTaskQueue;
 import dev.ftb.mods.ftbchunks.client.FTBChunksClient;
 import dev.ftb.mods.ftblibrary.math.XZ;
@@ -70,6 +71,10 @@ public class MapDimension implements MapTask {
 			currentDimension = MapManager.getInstance()
 					.map(m -> m.getDimension(level.dimension()))
 					.orElse(null);
+
+			if (currentDimension != null) {
+				WaypointManagerEvent.AVAILABLE.invoker().onAvailable(currentDimension.getWaypointManager());
+			}
 		}
 
 		return Optional.ofNullable(currentDimension);
