@@ -4,19 +4,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2101.1.10]
+
+### Added
+* Waypoints added via API can now be marked as transient
+  * Transient waypoints are not persisted on the client after player logout or dimension changing
+  * Transient waypoints should be added via the new `WaypointManagerEvent.AVAILABLE` Architectury event
+
+### Fixed
+* Fixed minimap game time display being out by 6 game hours
+* Fixed added waypoint Y values being way out in void dimensions
+* Fixed Yellow Archwood (Ars Elemental) being wrong colour on the map (thanks @cragolf)
+* Fixed a dupe bug under certain circumstances
+
 ## [2101.1.9]
 
 ### Added
 * Added `pt_br` translation (thanks @Xlr11)
 * Added `es_max` translation (thanks @TheLegendofSaram)
 * Added `ja_jp` translation (thanks @twister716)
-* Fixed Create framed glass blocks rendering black on the map (thanks @Varocraft25)
 
 ### Fixed
 * Ensure F3 isn't being held when checking for key presses
   * e.g. if "Add Waypoint" is bound to "B", pressing F3+B no longer pops up the add waypoint dialog
 * Fixed an edge case causing NPE's during checking blockstates for water
 * Fixed some entity face map icons going missing when using higher-resolution texture packs
+* Fixed Create framed glass blocks rendering black on the map (thanks @Varocraft25)
 
 ## [2101.1.8]
 

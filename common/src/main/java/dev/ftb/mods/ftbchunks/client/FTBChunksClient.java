@@ -21,12 +21,14 @@ import dev.ftb.mods.ftbchunks.FTBChunksWorldConfig;
 import dev.ftb.mods.ftbchunks.api.FTBChunksAPI;
 import dev.ftb.mods.ftbchunks.api.client.FTBChunksClientAPI;
 import dev.ftb.mods.ftbchunks.api.client.event.MapIconEvent;
+import dev.ftb.mods.ftbchunks.api.client.event.WaypointManagerEvent;
 import dev.ftb.mods.ftbchunks.api.client.icon.MapIcon;
 import dev.ftb.mods.ftbchunks.api.client.icon.MapType;
 import dev.ftb.mods.ftbchunks.api.client.icon.WaypointIcon;
 import dev.ftb.mods.ftbchunks.api.client.minimap.MinimapContext;
 import dev.ftb.mods.ftbchunks.api.client.minimap.MinimapInfoComponent;
 import dev.ftb.mods.ftbchunks.api.client.waypoint.Waypoint;
+import dev.ftb.mods.ftbchunks.api.client.waypoint.WaypointManager;
 import dev.ftb.mods.ftbchunks.client.gui.*;
 import dev.ftb.mods.ftbchunks.client.map.*;
 import dev.ftb.mods.ftbchunks.client.map.color.ColorUtils;
@@ -47,6 +49,7 @@ import dev.ftb.mods.ftblibrary.ui.CustomClickEvent;
 import dev.ftb.mods.ftblibrary.ui.GuiHelper;
 import dev.ftb.mods.ftblibrary.ui.Theme;
 import dev.ftb.mods.ftblibrary.ui.input.Key;
+import dev.ftb.mods.ftblibrary.util.ModUtils;
 import dev.ftb.mods.ftblibrary.util.client.ClientUtils;
 import dev.ftb.mods.ftbteams.api.event.ClientTeamPropertiesChangedEvent;
 import dev.ftb.mods.ftbteams.api.event.TeamEvent;
@@ -182,6 +185,10 @@ public enum FTBChunksClient {
         ClientReloadShadersEvent.EVENT.register(this::reloadShaders);
         registerPlatform();
 
+        if (ModUtils.isDevMode()) {
+            WaypointManagerEvent.AVAILABLE.register(this::waypointManagerAvailable);
+        }
+
         // Register minimap components
         FTBChunksClientAPI clientApi = FTBChunksAPI.clientApi();
         clientApi.registerMinimapComponent(new PlayerPosInfoComponent());
@@ -193,6 +200,13 @@ public enum FTBChunksClient {
         clientApi.registerMinimapComponent(new DebugComponent());
 
         ClientLifecycleEvent.CLIENT_STARTED.register(this::clientStarted);
+    }
+
+    private void waypointManagerAvailable(WaypointManager mgr) {
+        // only called in dev mode, testing transient waypoints
+        if (Minecraft.getInstance().level.dimension().equals(Level.OVERWORLD)) {
+            mgr.addTransientWaypointAt(new BlockPos(0, 65, 0), "Transient Dev-Mode Waypoint").setColor(0x808080);
+        }
     }
 
     private void maybeMigrateClientConfig() {
