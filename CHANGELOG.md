@@ -6,10 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2101.1.10]
 
+### Added
+* Waypoints added via API can now be marked as transient
+  * Transient waypoints are not persisted on the client after player logout or dimension changing
+  * Transient waypoints should be added via the new `WaypointManagerEvent.AVAILABLE` Architectury event
+
 ### Fixed
 * Fixed minimap game time display being out by 6 game hours
 * Fixed added waypoint Y values being way out in void dimensions
 * Fixed Yellow Archwood (Ars Elemental) being wrong colour on the map (thanks @cragolf)
+* Fixed a dupe bug under certain circumstances
 
 ## [2101.1.9]
 
