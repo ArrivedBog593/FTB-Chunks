@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2001.3.7]
 
 ### Fixed
+* Fixed added waypoint Y values being way out in void dimensions
 * Fixed a dupe bug under certain circumstances
 
 ## [2001.3.6]
